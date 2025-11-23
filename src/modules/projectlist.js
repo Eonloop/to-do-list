@@ -1,4 +1,5 @@
 import createProject from "./projects";
+import createProjectModal from "./modals";
 
 function createProjectList() {
     const projectListDiv = document.createElement("div");
@@ -15,7 +16,7 @@ function createProjectList() {
     projectListDiv.appendChild(addProjectButton);
 
     addProjectButton.onclick = () => {
-        createProject();
+        createProjectModal();
     };
 }
 
