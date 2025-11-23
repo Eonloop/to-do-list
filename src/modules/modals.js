@@ -31,4 +31,17 @@ function createProjectModal() {
     };
 }
 
+function createTaskModal() {
+    //Todo: Create task modal
+}
+
+
+function projectDetailsModal() {
+    //Todo: Create project details modal
+}
+
+function taskDetailsModal() {
+    //Todo: Create task details modal
+}
+
 export default createProjectModal;
