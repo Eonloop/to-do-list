@@ -1,23 +1,25 @@
-import createProject from "./projects";
-import createProjectModal from "./modals";
+export default class ProjectList {
+    constructor() {
+        this.projects = [];
+    }
 
-function createProjectList() {
-    const projectListDiv = document.createElement("div");
-    projectListDiv.classList.add("project-list");
-    document.querySelector(".sidebar").appendChild(projectListDiv);
+    addProject(project) {
+        this.projects.push(project);
+    }
 
-    const projectContainer = document.createElement("div");
-    projectContainer.classList.add("project-container");
-    projectListDiv.appendChild(projectContainer);
+    removeProject(index) {
+        this.projects.splice(index, 1);
+    }
 
-    const addProjectButton = document.createElement("button");
-    addProjectButton.textContent = "Add Project";
-    addProjectButton.classList.add("add-project-button");
-    projectListDiv.appendChild(addProjectButton);
+    getProject(index) {
+        return this.projects[index];
+    }
 
-    addProjectButton.onclick = () => {
-        createProjectModal();
-    };
+    getAllProjects() {
+        return this.projects;
+    }
+
+    getProjectCount() {
+        return this.projects.length;
+    }
 }
-
-export default createProjectList;

@@ -1,4 +1,4 @@
-import createProject from "./projects";
+import Project from "./project"
 
 function createProjectModal() {
     const projectModal = document.createElement("div");
@@ -23,11 +23,8 @@ function createProjectModal() {
     projectModalContent.appendChild(projectModalButton);
 
     projectModalButton.onclick = () => {
-        const projectName = projectModalInput.value.trim();
-        if (projectName) {
-            createProject(projectName);
-            projectModal.remove();
-        }
+        const project = new Project(projectModalInput.value.trim());
+        
     };
 }
 
