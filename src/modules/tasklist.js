@@ -1,4 +1,4 @@
-export default class TaskList {
+class TaskList {
     constructor() {
         this.tasks = [];
     }
@@ -23,4 +23,9 @@ export default class TaskList {
         return this.tasks.length;
     }
 }
+
+const mainTaskList = new TaskList();
+
+export default mainTaskList;
+export { TaskList };
 

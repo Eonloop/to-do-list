@@ -1,4 +1,4 @@
-export default class ProjectList {
+class ProjectList {
     constructor() {
         this.projects = [];
     }
@@ -23,3 +23,7 @@ export default class ProjectList {
         return this.projects.length;
     }
 }
+
+const mainProjectList = new ProjectList();
+export default mainProjectList;
+export { ProjectList };
