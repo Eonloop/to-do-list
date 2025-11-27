@@ -26,4 +26,3 @@ class ProjectList {
 
 const mainProjectList = new ProjectList();
 export default mainProjectList;
-export { ProjectList };

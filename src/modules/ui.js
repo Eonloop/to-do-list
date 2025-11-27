@@ -3,14 +3,11 @@ import mainProjectList from './projectlist.js';
 import mainTaskList from './tasklist.js';
 import createProjectModal from './modals.js';
 import { createTaskModal } from './modals.js';
-import Project from './project.js';
-import Task from './task.js';
 
 let projectListUl = null; // Reference to the UL element for updates
 let taskListUl = null; 
-let currentProject = null;
 
-function createUI() {
+export default function createUI() {
     createHeader();
     createFooter();
     createSidebar();
@@ -39,12 +36,30 @@ function createFooter() {
 }
 
 function createSidebar() {
+    //Create sidebar div
     const sidebarDiv = document.createElement("div");
-    const sidebar = document.createElement("h2");
-    sidebar.textContent = "Projects";
-    sidebarDiv.appendChild(sidebar);
     sidebarDiv.classList.add("sidebar");
     document.body.appendChild(sidebarDiv);
+
+
+    const sidebarTitle = document.createElement("h2");
+    sidebarTitle.textContent = "Projects";
+    sidebarDiv.appendChild(sidebarTitle);
+
+    projectListUl = document.createElement("ul");
+    projectListUl.classList.add("project-list-ul");
+    sidebarDiv.appendChild(projectListUl);
+
+    const addProjectButton = document.createElement("button");
+    addProjectButton.textContent = "Add Project";
+    addProjectButton.classList.add("add-project-button");
+    addProjectButton.onclick = () => {
+        createProjectModal();
+    };
+    sidebarDiv.appendChild(addProjectButton);
+
+    // Initial render
+    renderProjects();
 
 }
 
@@ -99,25 +114,7 @@ function renderTasks() {
     });
 }
 
-function createProjectList() {
-    const projectListDiv = document.createElement("div");
-    projectListDiv.classList.add("project-list");
-    document.body.appendChild(projectListDiv);
-    
-    projectListUl = document.createElement("ul");
-    projectListDiv.appendChild(projectListUl);
-    
-    const addProjectButton = document.createElement("button");
-    addProjectButton.textContent = "Add Project";
-    addProjectButton.classList.add("add-project-button");
-    addProjectButton.onclick = () => {
-        createProjectModal();
-    };
-    projectListDiv.appendChild(addProjectButton);
 
-    // Initial render
-    renderProjects();
-}
 
 function createTaskList() {
     const taskListDiv = document.createElement("div");
@@ -145,8 +142,3 @@ function createTaskList() {
 
 // Export renderProjects so modals can call it directly
 export { renderProjects, renderTasks };
-
-
-
-
-export default createUI;
