@@ -11,7 +11,6 @@ export default function createUI() {
     createHeader();
     createFooter();
     createSidebar();
-    createProjectList();
     createTaskList();
 }
 
@@ -139,6 +138,8 @@ function createTaskList() {
     // Initial render
     renderTasks();
 }
+
+
 
 // Export renderProjects so modals can call it directly
 export { renderProjects, renderTasks };
