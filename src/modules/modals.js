@@ -15,6 +15,15 @@ function createProjectModal() {
     projectModalContent.classList.add("project-modal-content");
     projectModal.appendChild(projectModalContent);
 
+    const projectCloseButton = document.createElement("button");
+    projectCloseButton.textContent = "X";
+    projectCloseButton.classList.add("project-close-button");
+    projectModalContent.appendChild(projectCloseButton);
+
+    projectCloseButton.onclick = () => {
+        projectModal.remove();
+    };
+
     const projectModalHeader = document.createElement("h2");
     projectModalHeader.textContent = "Add Project";
     projectModalContent.appendChild(projectModalHeader);
@@ -26,6 +35,7 @@ function createProjectModal() {
 
     const projectModalButton = document.createElement("button");
     projectModalButton.textContent = "Add Project";
+    projectModalButton.classList.add("project-modal-button");
     projectModalContent.appendChild(projectModalButton);
 
     projectModalButton.onclick = () => {
@@ -50,6 +60,15 @@ function createTaskModal() {
     const taskModalContent = document.createElement("div");
     taskModalContent.classList.add("task-modal-content");
     taskModal.appendChild(taskModalContent);
+
+    const taskCloseButton = document.createElement("button");
+    taskCloseButton.textContent = "X";
+    taskCloseButton.classList.add("task-close-button");
+    taskModalContent.appendChild(taskCloseButton);
+
+    taskCloseButton.onclick = () => {
+        taskModal.remove();
+    };
 
     const taskModalHeader = document.createElement("h2");
     taskModalHeader.textContent = "Task Details";
@@ -77,6 +96,7 @@ function createTaskModal() {
 
     const taskModalButton = document.createElement("button");
     taskModalButton.textContent = "Add Task";
+    taskModalButton.classList.add("task-modal-button");
     taskModalContent.appendChild(taskModalButton);
 
     taskModalButton.onclick = () => {
