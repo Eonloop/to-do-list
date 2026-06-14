@@ -108,8 +108,16 @@ function renderTasks() {
         console.log('Rendering task:', task);
         const taskItem = document.createElement("li");
         taskItem.classList.add("task");
+        const taskDetailsButton = document.createElement("button");
+        taskDetailsButton.textContent = "Details";
+        taskDetailsButton.classList.add("task-details-button");
+        taskItem.appendChild(taskDetailsButton);
+        taskDetailsButton.onclick = () => {
+            taskDetailsModal(task);
+        };
         taskItem.textContent = task.getTitle();
         taskListUl.appendChild(taskItem);
+        taskItem.appendChild(taskDetailsButton);
     });
 }
 
