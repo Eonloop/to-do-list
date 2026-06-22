@@ -1,9 +1,8 @@
 import Project from "./project.js";
 import mainProjectList from "./projectlist.js";
-import { renderProjects } from "./ui.js";
+import { renderTasks, selectProject } from "./ui.js";
 import Task from "./task.js";
 import mainTaskList from "./tasklist.js";
-import { renderTasks } from "./ui.js";
 
 
 function createProjectModal() {
@@ -43,10 +42,8 @@ function createProjectModal() {
         if (projectName) {
             const project = new Project(projectName);
             mainProjectList.addProject(project);
-            console.log('Project added. Total projects:', mainProjectList.getAllProjects().length);
             projectModal.remove();
-            // Refresh the UI to show the new project
-            renderProjects();
+            selectProject(project);
         }
     };
 }
@@ -89,9 +86,13 @@ function createTaskModal() {
     taskModalDueDate.placeholder = "Task Due Date";
     taskModalContent.appendChild(taskModalDueDate);
 
-    const taskModalPriority = document.createElement("input");
-    taskModalPriority.type = "number";
-    taskModalPriority.placeholder = "Task Priority";
+    const taskModalPriority = document.createElement("select");
+    taskModalPriority.id = "task-priority";
+    taskModalPriority.innerHTML = `
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    `;
     taskModalContent.appendChild(taskModalPriority);
 
     const taskModalButton = document.createElement("button");
@@ -115,7 +116,49 @@ function projectDetailsModal() {
 
 function taskDetailsModal() {
     //Todo: Create task details modal
+    const taskDetailsModal = document.createElement("div");
+    taskDetailsModal.classList.add("task-details-modal");
+    document.body.appendChild(taskDetailsModal);
+
+    const taskDetailsModalContent = document.createElement("div");
+    taskDetailsModalContent.classList.add("task-details-modal-content");
+    taskDetailsModal.appendChild(taskDetailsModalContent);
+
+    const taskDetailsModalCloseButton = document.createElement("button");
+    taskDetailsModalCloseButton.textContent = "X";
+    taskDetailsModalCloseButton.classList.add("task-details-modal-close-button");
+    taskDetailsModalContent.appendChild(taskDetailsModalCloseButton);
+
+    taskDetailsModalCloseButton.onclick = () => {
+        taskDetailsModal.remove();
+    };
+
+    const taskDetailsModalHeader = document.createElement("h2");
+    taskDetailsModalHeader.textContent = "Task Details";
+    taskDetailsModalContent.appendChild(taskDetailsModalHeader);
+
+    const taskDetailsModalDescription = document.createElement("p");
+    taskDetailsModalDescription.textContent = "Description";
+    taskDetailsModalContent.appendChild(taskDetailsModalDescription);
+
+    const taskDetailsModalDueDate = document.createElement("p");
+    taskDetailsModalDueDate.textContent = "Due Date";
+    taskDetailsModalContent.appendChild(taskDetailsModalDueDate);
+
+    const taskDetailsModalPriority = document.createElement("p");
+    taskDetailsModalPriority.textContent = "Priority";
+    taskDetailsModalContent.appendChild(taskDetailsModalPriority);
+
+    const taskDetailsModalButton = document.createElement("button");
+    taskDetailsModalButton.textContent = "Edit Task";
+    taskDetailsModalButton.classList.add("task-details-modal-button");
+    taskDetailsModalContent.appendChild(taskDetailsModalButton);
+
+    taskDetailsModalButton.onclick = () => {
+        taskDetailsModal.remove();
+    };
+    
 }
 
 export default createProjectModal;
-export { createTaskModal };
+export { createTaskModal, taskDetailsModal };

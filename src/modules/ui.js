@@ -1,22 +1,30 @@
 import '../styles.css';
+import Project from './project.js';
 import mainProjectList from './projectlist.js';
 import mainTaskList from './tasklist.js';
 import createProjectModal from './modals.js';
 import { createTaskModal } from './modals.js';
+import { taskDetailsModal } from './modals.js';
 
-let projectListUl = null; // Reference to the UL element for updates
-let taskListUl = null; 
+let projectListUl = null;
+let taskListUl = null;
+let taskListHeader = null;
 
 export default function createUI() {
+    mainProjectList.loadProjectsFromStorage();
+
+    if (mainProjectList.getProjectCount() === 0) {
+        mainProjectList.addProject(new Project('Inbox'));
+    }
+
+    mainTaskList.selectProject(mainProjectList.getProject(0).getName());
+
     createHeader();
     createFooter();
     createSidebar();
     createTaskList();
 }
 
-
-
-// Basic UI elements for setup
 function createHeader() {
     const headerDiv = document.createElement("div");
     const header = document.createElement("h1");
@@ -35,11 +43,9 @@ function createFooter() {
 }
 
 function createSidebar() {
-    //Create sidebar div
     const sidebarDiv = document.createElement("div");
     sidebarDiv.classList.add("sidebar");
     document.body.appendChild(sidebarDiv);
-
 
     const sidebarTitle = document.createElement("h2");
     sidebarTitle.textContent = "Projects";
@@ -57,79 +63,78 @@ function createSidebar() {
     };
     sidebarDiv.appendChild(addProjectButton);
 
-    // Initial render
     renderProjects();
-
 }
 
-// Function to render projects in the list
+function updateTaskListHeader(projectName) {
+    if (taskListHeader) {
+        taskListHeader.textContent = projectName;
+    }
+}
+
+function selectProject(project) {
+    mainTaskList.selectProject(project.getName());
+    updateTaskListHeader(project.getName());
+    renderProjects();
+    renderTasks();
+}
+
 function renderProjects() {
     if (!projectListUl) return;
-    
-    // Clear existing items
+
     projectListUl.innerHTML = '';
-    
-    // Debug: Check what we're getting
+
+    const currentProjectName = mainTaskList.getCurrentProjectName();
     const projects = mainProjectList.getAllProjects();
-    console.log('Projects array:', projects);
-    console.log('Number of projects:', projects.length);
-    
-    // Render each project
+
     projects.forEach(project => {
-        console.log('Rendering project:', project);
         const projectItem = document.createElement("li");
         projectItem.classList.add("project-item");
         projectItem.textContent = project.getName();
-        projectListUl.appendChild(projectItem);
-        projectItem.onclick = () => {
-            // Remove active class from all project items
-            Array.from(projectListUl.children).forEach(item => {
-                item.classList.remove("project-item-active");
-            });
-            // Add active class to the clicked item
+
+        if (project.getName() === currentProjectName) {
             projectItem.classList.add("project-item-active");
+        }
+
+        projectItem.onclick = () => {
+            selectProject(project);
         };
+
+        projectListUl.appendChild(projectItem);
     });
 }
 
 function renderTasks() {
     if (!taskListUl) return;
-    
-    // Clear existing items
+
     taskListUl.innerHTML = '';
-    
-    // Debug: Check what we're getting
+
     const tasks = mainTaskList.getAllTasks();
-    console.log('Tasks array:', tasks);
-    console.log('Number of tasks:', tasks.length);
-    
-    // Render each task
+
     tasks.forEach(task => {
-        console.log('Rendering task:', task);
         const taskItem = document.createElement("li");
         taskItem.classList.add("task");
+        taskItem.textContent = task.getTitle();
+
         const taskDetailsButton = document.createElement("button");
         taskDetailsButton.textContent = "Details";
         taskDetailsButton.classList.add("task-details-button");
-        taskItem.appendChild(taskDetailsButton);
-        taskDetailsButton.onclick = () => {
-            taskDetailsModal(task);
+        taskItem.onclick = () => {
+            taskDetailsModal();
         };
-        taskItem.textContent = task.getTitle();
-        taskListUl.appendChild(taskItem);
         taskItem.appendChild(taskDetailsButton);
+
+        taskListUl.appendChild(taskItem);
     });
 }
-
-
 
 function createTaskList() {
     const taskListDiv = document.createElement("div");
     taskListDiv.classList.add("task-list");
     document.body.appendChild(taskListDiv);
 
-    const taskListHeader = document.createElement("h2");
-    taskListHeader.textContent = mainProjectList.getProject(0);
+    taskListHeader = document.createElement("h2");
+    taskListHeader.textContent = mainTaskList.getCurrentProjectName();
     taskListDiv.appendChild(taskListHeader);
 
     taskListUl = document.createElement("ul");
@@ -143,11 +148,7 @@ function createTaskList() {
     };
     taskListDiv.appendChild(addTaskButton);
 
-    // Initial render
     renderTasks();
 }
 
-
-
-// Export renderProjects so modals can call it directly
-export { renderProjects, renderTasks };
+export { renderProjects, renderTasks, selectProject };
