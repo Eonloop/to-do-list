@@ -1,4 +1,4 @@
-import { loadTasksFromStorage, saveTasksToStorage } from './storage.js';
+import { loadTasksFromStorage, saveTasksToStorage } from "./storage.js";
 
 class TaskList {
     constructor() {
@@ -38,6 +38,11 @@ class TaskList {
 
     getTaskCount() {
         return this.tasks.length;
+    }
+
+    clearTasks() {
+        this.tasks = [];
+        saveTasksToStorage(this.currentProjectName, this.tasks);
     }
 }
 
