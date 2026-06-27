@@ -1,10 +1,10 @@
-import '../styles.css';
-import Project from './project.js';
-import mainProjectList from './projectlist.js';
-import mainTaskList from './tasklist.js';
-import createProjectModal from './modals.js';
-import { createTaskModal } from './modals.js';
-import { taskDetailsModal } from './modals.js';
+import "../styles.css";
+import Project from "./project.js";
+import mainProjectList from "./projectlist.js";
+import mainTaskList from "./tasklist.js";
+import createProjectModal from "./modals.js";
+import { createTaskModal } from "./modals.js";
+import { taskDetailsModal } from "./modals.js";
 
 let projectListUl = null;
 let taskListUl = null;
@@ -14,7 +14,7 @@ export default function createUI() {
     mainProjectList.loadProjectsFromStorage();
 
     if (mainProjectList.getProjectCount() === 0) {
-        mainProjectList.addProject(new Project('Inbox'));
+        mainProjectList.addProject(new Project("Inbox"));
     }
 
     mainTaskList.selectProject(mainProjectList.getProject(0).getName());
@@ -79,18 +79,38 @@ function selectProject(project) {
     renderTasks();
 }
 
+function removeProject(index) {
+    mainTaskList = [];
+    mainProjectList.removeProject();
+    renderProjects();
+    renderTasks();
+}
+
 function renderProjects() {
     if (!projectListUl) return;
 
-    projectListUl.innerHTML = '';
+    projectListUl.innerHTML = "";
 
     const currentProjectName = mainTaskList.getCurrentProjectName();
     const projects = mainProjectList.getAllProjects();
 
-    projects.forEach(project => {
+    projects.forEach((project, index) => {
         const projectItem = document.createElement("li");
         projectItem.classList.add("project-item");
         projectItem.textContent = project.getName();
+
+        if (project.getName() != "Inbox") {
+            const projectDeleteButton = document.createElement("button");
+            projectDeleteButton.textContent = "X";
+            projectDeleteButton.classList.add("project-delete-button");
+            projectDeleteButton.onclick = () => {
+                mainProjectList.removeProject(index);
+                mainTaskList.clearTasks();
+                renderProjects();
+                renderTasks();
+            };
+            projectItem.appendChild(projectDeleteButton);
+        }
 
         if (project.getName() === currentProjectName) {
             projectItem.classList.add("project-item-active");
@@ -107,11 +127,11 @@ function renderProjects() {
 function renderTasks() {
     if (!taskListUl) return;
 
-    taskListUl.innerHTML = '';
+    taskListUl.innerHTML = "";
 
     const tasks = mainTaskList.getAllTasks();
 
-    tasks.forEach(task => {
+    tasks.forEach((task) => {
         const taskItem = document.createElement("li");
         taskItem.classList.add("task");
         taskItem.textContent = task.getTitle();
