@@ -329,4 +329,14 @@ body {
     }
 }
 
+.task-delete-button {
+    background-color: rgb(19, 182, 52);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
 /* Todo - Add Media Queries for different screen sizes */
