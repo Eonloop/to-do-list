@@ -3,7 +3,7 @@ import mainProjectList from "./projectlist.js";
 import { renderTasks, selectProject } from "./ui.js";
 import Task from "./task.js";
 import mainTaskList from "./tasklist.js";
-
+import { saveTasksToStorage } from "./storage.js";
 
 function createProjectModal() {
     const projectModal = document.createElement("div");
@@ -109,12 +109,7 @@ function createTaskModal() {
     };
 }
 
-
-function projectDetailsModal() {
-    //Todo: Create project details modal
-}
-
-function taskDetailsModal() {
+function taskDetailsModal(index) {
     //Todo: Create task details modal
     const taskDetailsModal = document.createElement("div");
     taskDetailsModal.classList.add("task-details-modal");
@@ -138,16 +133,25 @@ function taskDetailsModal() {
     taskDetailsModalContent.appendChild(taskDetailsModalHeader);
 
     const taskDetailsModalDescription = document.createElement("p");
+    const taskDetailsModalDescriptionText = document.createElement("p");
     taskDetailsModalDescription.textContent = "Description";
+    taskDetailsModalDescriptionText.textContent = mainTaskList.getTask(index).getDescription();
     taskDetailsModalContent.appendChild(taskDetailsModalDescription);
+    taskDetailsModalContent.appendChild(taskDetailsModalDescriptionText);
 
     const taskDetailsModalDueDate = document.createElement("p");
+    const taskDetailsModalDueDateText = document.createElement("p");
     taskDetailsModalDueDate.textContent = "Due Date";
+    taskDetailsModalDueDateText.textContent = mainTaskList.getTask(index).getDueDate();
     taskDetailsModalContent.appendChild(taskDetailsModalDueDate);
+    taskDetailsModalContent.appendChild(taskDetailsModalDueDateText);
 
     const taskDetailsModalPriority = document.createElement("p");
+    const taskDetailsModalPriorityText = document.createElement("p");
     taskDetailsModalPriority.textContent = "Priority";
+    taskDetailsModalPriorityText.textContent = mainTaskList.getTask(index).getPriority();
     taskDetailsModalContent.appendChild(taskDetailsModalPriority);
+    taskDetailsModalContent.appendChild(taskDetailsModalPriorityText);
 
     const taskDetailsModalButton = document.createElement("button");
     taskDetailsModalButton.textContent = "Edit Task";
@@ -155,9 +159,78 @@ function taskDetailsModal() {
     taskDetailsModalContent.appendChild(taskDetailsModalButton);
 
     taskDetailsModalButton.onclick = () => {
+        editTaskModal(index);
         taskDetailsModal.remove();
     };
     
+}
+
+function editTaskModal(index) {
+    const editTaskModal = document.createElement("div");
+    editTaskModal.classList.add("edit-task-modal");
+    document.body.appendChild(editTaskModal);
+
+    const editTaskModalContent = document.createElement("div");
+    editTaskModalContent.classList.add("edit-task-modal-content");
+    editTaskModal.appendChild(editTaskModalContent);
+
+    const editTaskModalCloseButton = document.createElement("button");
+    editTaskModalCloseButton.textContent = "X";
+    editTaskModalCloseButton.classList.add("edit-task-modal-close-button");
+    editTaskModalContent.appendChild(editTaskModalCloseButton);
+
+    editTaskModalCloseButton.onclick = () => {
+        editTaskModal.remove();
+    };
+    
+    const editTaskModalHeader = document.createElement("h2");
+    editTaskModalHeader.textContent = "Edit Task";
+    editTaskModalContent.appendChild(editTaskModalHeader);
+
+    const editTaskModalInput = document.createElement("input");
+    editTaskModalInput.type = "text";
+    editTaskModalInput.placeholder = "Task Name";
+    editTaskModalInput.value = mainTaskList.getTask(index).getTitle();
+    editTaskModalContent.appendChild(editTaskModalInput);
+    
+    const editTaskModalDescription = document.createElement("input");
+    editTaskModalDescription.type = "text";
+    editTaskModalDescription.placeholder = "Task Description";
+    editTaskModalDescription.value = mainTaskList.getTask(index).getDescription();
+    editTaskModalContent.appendChild(editTaskModalDescription);
+
+    const editTaskModalDueDate = document.createElement("input");
+    editTaskModalDueDate.type = "date";
+    editTaskModalDueDate.placeholder = "Task Due Date";
+    editTaskModalDueDate.value = mainTaskList.getTask(index).getDueDate();
+    editTaskModalContent.appendChild(editTaskModalDueDate);
+
+    const editTaskModalPriority = document.createElement("select");
+    editTaskModalPriority.id = "edit-task-priority";
+    editTaskModalPriority.innerHTML = `
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    `;
+    editTaskModalPriority.value = mainTaskList.getTask(index).getPriority();
+    editTaskModalContent.appendChild(editTaskModalPriority);
+
+    const editTaskModalButton = document.createElement("button");
+    editTaskModalButton.textContent = "Edit Task";
+    editTaskModalButton.classList.add("edit-task-modal-button");
+    editTaskModalContent.appendChild(editTaskModalButton);
+    
+    editTaskModalButton.onclick = () => {
+        mainTaskList.getTask(index).setTitle(editTaskModalInput.value.trim());
+        mainTaskList.getTask(index).setDescription(editTaskModalDescription.value.trim());
+        mainTaskList.getTask(index).setDueDate(editTaskModalDueDate.value.trim());
+        mainTaskList.getTask(index).setPriority(editTaskModalPriority.value.trim());
+        editTaskModal.remove();
+        // Refresh the UI to show the new task
+
+        renderTasks();
+        saveTasksToStorage(mainTaskList.getCurrentProjectName(), mainTaskList.getAllTasks());
+    };
 }
 
 export default createProjectModal;
