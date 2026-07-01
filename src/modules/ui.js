@@ -104,6 +104,7 @@ function createTaskList() {
 
 function deleteProject(index) {
   mainProjectList.removeProject(index);
+  mainTaskList.clearTasks();
   const inbox = mainProjectList.getProjectByName("Inbox");
   if (inbox) {
     selectProject(inbox);
@@ -164,7 +165,7 @@ function renderTasks() {
     taskItem.textContent = task.getTitle();
 
     taskItem.onclick = () => {
-      taskDetailsModal();
+      taskDetailsModal(index);
     };
 
     const taskDeleteButton = document.createElement("button");
