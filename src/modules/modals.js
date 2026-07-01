@@ -101,7 +101,12 @@ function createTaskModal() {
     taskModalContent.appendChild(taskModalButton);
 
     taskModalButton.onclick = () => {
-        const task = new Task(taskModalInput.value.trim(), taskModalDescription.value.trim(), taskModalDueDate.value.trim(), taskModalPriority.value.trim());
+        const task = new Task(
+            taskModalInput.value.trim(),
+            taskModalDescription.value.trim(),
+            taskModalDueDate.value.trim(),
+            taskModalPriority.value.trim(),
+        );
         mainTaskList.addTask(task);
         taskModal.remove();
         // Refresh the UI to show the new task
@@ -121,7 +126,9 @@ function taskDetailsModal(index) {
 
     const taskDetailsModalCloseButton = document.createElement("button");
     taskDetailsModalCloseButton.textContent = "X";
-    taskDetailsModalCloseButton.classList.add("task-details-modal-close-button");
+    taskDetailsModalCloseButton.classList.add(
+        "task-details-modal-close-button",
+    );
     taskDetailsModalContent.appendChild(taskDetailsModalCloseButton);
 
     taskDetailsModalCloseButton.onclick = () => {
@@ -132,26 +139,45 @@ function taskDetailsModal(index) {
     taskDetailsModalHeader.textContent = "Task Details";
     taskDetailsModalContent.appendChild(taskDetailsModalHeader);
 
+    const taskDescriptionDiv = document.createElement("div");
+    taskDescriptionDiv.classList.add("task-description-div");
     const taskDetailsModalDescription = document.createElement("p");
     const taskDetailsModalDescriptionText = document.createElement("p");
-    taskDetailsModalDescription.textContent = "Description";
-    taskDetailsModalDescriptionText.textContent = mainTaskList.getTask(index).getDescription();
-    taskDetailsModalContent.appendChild(taskDetailsModalDescription);
-    taskDetailsModalContent.appendChild(taskDetailsModalDescriptionText);
+    taskDetailsModalDescription.textContent = "Description: ";
+    taskDetailsModalDescriptionText.textContent = mainTaskList
+        .getTask(index)
+        .getDescription();
+    taskDescriptionDiv.appendChild(taskDetailsModalDescription);
+    taskDescriptionDiv.appendChild(taskDetailsModalDescriptionText);
+    taskDetailsModalContent.appendChild(taskDescriptionDiv);
 
+    const taskDateDiv = document.createElement("div");
+    taskDateDiv.classList.add("task-date-div");
     const taskDetailsModalDueDate = document.createElement("p");
     const taskDetailsModalDueDateText = document.createElement("p");
-    taskDetailsModalDueDate.textContent = "Due Date";
-    taskDetailsModalDueDateText.textContent = mainTaskList.getTask(index).getDueDate();
-    taskDetailsModalContent.appendChild(taskDetailsModalDueDate);
-    taskDetailsModalContent.appendChild(taskDetailsModalDueDateText);
+    taskDetailsModalDueDate.textContent = "Due Date: ";
+    taskDetailsModalDueDateText.textContent = mainTaskList
+        .getTask(index)
+        .getDueDate();
+    taskDateDiv.appendChild(taskDetailsModalDueDate);
+    taskDateDiv.appendChild(taskDetailsModalDueDateText);
+    taskDetailsModalContent.appendChild(taskDateDiv);
 
+    const taskPriorityDiv = document.createElement("div");
+    taskPriorityDiv.classList.add("task-priority-div");
     const taskDetailsModalPriority = document.createElement("p");
+    taskDetailsModalPriority.classList.add("task-details-modal-priority");
     const taskDetailsModalPriorityText = document.createElement("p");
-    taskDetailsModalPriority.textContent = "Priority";
-    taskDetailsModalPriorityText.textContent = mainTaskList.getTask(index).getPriority();
-    taskDetailsModalContent.appendChild(taskDetailsModalPriority);
-    taskDetailsModalContent.appendChild(taskDetailsModalPriorityText);
+    taskDetailsModalPriorityText.classList.add(
+        "task-details-modal-priority-text",
+    );
+    taskDetailsModalPriority.textContent = "Priority: ";
+    taskDetailsModalPriorityText.textContent = mainTaskList
+        .getTask(index)
+        .getPriority();
+    taskPriorityDiv.appendChild(taskDetailsModalPriority);
+    taskPriorityDiv.appendChild(taskDetailsModalPriorityText);
+    taskDetailsModalContent.appendChild(taskPriorityDiv);
 
     const taskDetailsModalButton = document.createElement("button");
     taskDetailsModalButton.textContent = "Edit Task";
@@ -162,7 +188,6 @@ function taskDetailsModal(index) {
         editTaskModal(index);
         taskDetailsModal.remove();
     };
-    
 }
 
 function editTaskModal(index) {
@@ -182,7 +207,7 @@ function editTaskModal(index) {
     editTaskModalCloseButton.onclick = () => {
         editTaskModal.remove();
     };
-    
+
     const editTaskModalHeader = document.createElement("h2");
     editTaskModalHeader.textContent = "Edit Task";
     editTaskModalContent.appendChild(editTaskModalHeader);
@@ -192,11 +217,13 @@ function editTaskModal(index) {
     editTaskModalInput.placeholder = "Task Name";
     editTaskModalInput.value = mainTaskList.getTask(index).getTitle();
     editTaskModalContent.appendChild(editTaskModalInput);
-    
+
     const editTaskModalDescription = document.createElement("input");
     editTaskModalDescription.type = "text";
     editTaskModalDescription.placeholder = "Task Description";
-    editTaskModalDescription.value = mainTaskList.getTask(index).getDescription();
+    editTaskModalDescription.value = mainTaskList
+        .getTask(index)
+        .getDescription();
     editTaskModalContent.appendChild(editTaskModalDescription);
 
     const editTaskModalDueDate = document.createElement("input");
@@ -219,17 +246,26 @@ function editTaskModal(index) {
     editTaskModalButton.textContent = "Edit Task";
     editTaskModalButton.classList.add("edit-task-modal-button");
     editTaskModalContent.appendChild(editTaskModalButton);
-    
+
     editTaskModalButton.onclick = () => {
         mainTaskList.getTask(index).setTitle(editTaskModalInput.value.trim());
-        mainTaskList.getTask(index).setDescription(editTaskModalDescription.value.trim());
-        mainTaskList.getTask(index).setDueDate(editTaskModalDueDate.value.trim());
-        mainTaskList.getTask(index).setPriority(editTaskModalPriority.value.trim());
+        mainTaskList
+            .getTask(index)
+            .setDescription(editTaskModalDescription.value.trim());
+        mainTaskList
+            .getTask(index)
+            .setDueDate(editTaskModalDueDate.value.trim());
+        mainTaskList
+            .getTask(index)
+            .setPriority(editTaskModalPriority.value.trim());
         editTaskModal.remove();
         // Refresh the UI to show the new task
 
         renderTasks();
-        saveTasksToStorage(mainTaskList.getCurrentProjectName(), mainTaskList.getAllTasks());
+        saveTasksToStorage(
+            mainTaskList.getCurrentProjectName(),
+            mainTaskList.getAllTasks(),
+        );
     };
 }
 
